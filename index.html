@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123f91"><meta name="description" content="Offline Student Attendance App">
+<link rel="manifest" href="manifest.json">
+<title>Student Attendance</title>
+<style>
+:root{--b:#12479e;--blue:#1769d2;--bg:#f2f6fc;--ink:#18263e;--muted:#6b7890;--line:#e1e8f2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Arial,sans-serif}
+header{background:linear-gradient(130deg,#10377f,#1976df);color:white;padding:22px 18px 30px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:52px;height:52px;border-radius:16px;background:white;color:var(--b);display:grid;place-items:center;font-size:28px}
+h1{font-size:21px;margin:0}header p{margin:5px 0 0;color:#dceaff;font-size:13px}
+main{max-width:850px;margin:-13px auto 25px;padding:0 13px}.nav{display:flex;gap:7px;overflow:auto;margin-bottom:12px}
+button{border:0;border-radius:11px;padding:11px 13px;background:var(--b);color:white;font:inherit;font-weight:650;cursor:pointer}
+.nav button{white-space:nowrap;background:white;color:var(--b);border:1px solid var(--line)}.nav button.on{background:var(--b);color:white}
+.card{background:white;border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:12px;box-shadow:0 5px 18px #17365c0b}
+h2{font-size:18px;margin:0 0 13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px}
+.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:12px}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{font-size:24px}
+label{display:block;font-size:14px;font-weight:650;margin:10px 0 5px}input,select{width:100%;padding:12px;border:1px solid #cbd6e5;border-radius:11px;font:inherit;background:#fff;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{width:100%;margin-top:12px}.muted{color:var(--muted);font-size:12px;line-height:1.7}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}th,td{text-align:right;padding:9px 5px;border-bottom:1px solid var(--line)}th{color:var(--muted)}
+.actions{display:flex;gap:5px;flex-wrap:wrap}.actions button{padding:7px 9px;font-size:12px}.green{background:#16834b}.red{background:#c83b3b}.orange{background:#b9780a}.light{background:#eaf1fc;color:var(--b)}
+.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#e9f7ef;color:#147343;font-size:12px}.hide{display:none}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.stats{gap:6px}.stat{padding:10px}.stat b{font-size:21px}table{font-size:12px}}
+</style></head>
+<body>
+<header><div class="brand"><div class="logo">🎓</div><div><h1>Student Attendance</h1><p>طلباء کی حاضری کا آسان نظام • آف لائن</p></div></div></header>
+<main>
+<div class="nav">
+<button class="on" data-page="teacher">استاد / ایڈمن</button><button data-page="student">طالب علم</button><button data-page="reports">رپورٹس</button>
+</div>
+<section id="teacher">
+<div class="stats"><div class="stat"><span>کل طلباء</span><b id="total">0</b></div><div class="stat"><span>آج حاضر</span><b id="present">0</b></div><div class="stat"><span>آج غیر حاضر</span><b id="absent">0</b></div></div>
+<div class="card"><h2>➕ نیا طالب علم</h2>
+<div class="grid"><div><label>طالب علم کا نام</label><input id="nm" placeholder="پورا نام"></div><div><label>رول نمبر</label><input id="rl" placeholder="مثلاً 101"></div><div><label>کلاس</label><input id="cl" placeholder="مثلاً جماعت 8"></div><div><label>طالب علم پن (4 ہندسے)</label><input id="pn" inputmode="numeric" maxlength="4" placeholder="مثلاً 2468"></div></div>
+<button class="full" id="add">طالب علم محفوظ کریں</button><p class="muted">یہ ڈیمو صرف اسی موبائل کے براؤزر میں ڈیٹا محفوظ کرتا ہے۔ PIN کو حقیقی سکیورٹی نہ سمجھیں۔</p></div>
+<div class="card"><h2>📅 روزانہ حاضری</h2><label>تاریخ</label><input type="date" id="date"><label>تلاش کریں</label><input id="search" placeholder="نام، رول نمبر یا کلاس"><div id="list"></div></div>
+</section>
+<section id="student" class="hide"><div class="card"><h2>👨‍🎓 طالب علم لاگ اِن</h2><label>رول نمبر</label><input id="sroll" placeholder="اپنا رول نمبر"><label>4 ہندسوں کا PIN</label><input id="spin" type="password" inputmode="numeric" maxlength="4" placeholder="PIN"><button class="full" id="signin">میرا ریکارڈ دیکھیں</button><div id="studentout"></div></div></section>
+<section id="reports" class="hide"><div class="card"><h2>📊 حاضری رپورٹ</h2><label>رول نمبر (تمام طلباء کے لیے خالی چھوڑیں)</label><input id="rr" placeholder="رول نمبر"><button class="full" id="showreport">رپورٹ بنائیں</button><button class="full light" id="download">CSV رپورٹ ڈاؤن لوڈ</button><div id="reportout"></div></div></section>
+<p class="muted">آف لائن ایپ • اپنا ڈیٹا محفوظ رکھنے کے لیے وقتاً فوقتاً رپورٹ ڈاؤن لوڈ کریں۔ براؤزر کا ڈیٹا صاف کرنے سے ریکارڈ ضائع ہو سکتا ہے۔</p>
+</main>
+<script>
+const $=x=>document.getElementById(x),today=new Date().toISOString().slice(0,10);
+let db=JSON.parse(localStorage.getItem('sa_offline_v1')||'{"students":[],"attendance":{}}');$('date').value=today;
+function save(){localStorage.setItem('sa_offline_v1',JSON.stringify(db));draw()}
+function safe(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function val(roll,date){return db.attendance[date]?.[roll]||''}
+function mark(roll,status){let d=$('date').value;db.attendance[d]??={};db.attendance[d][roll]=status;save()}
+function draw(){
+ let d=$('date').value,day=Object.values(db.attendance[d]||{});$('total').textContent=db.students.length;$('present').textContent=day.filter(x=>x==='حاضر').length;$('absent').textContent=day.filter(x=>x==='غیر حاضر').length;
+ let q=$('search').value.trim().toLowerCase(),ss=db.students.filter(s=>(s.name+' '+s.roll+' '+s.cls).toLowerCase().includes(q));
+ $('list').innerHTML=ss.length?'<table><tr><th>طالب علم</th><th>کلاس</th><th>حاضری</th></tr>'+ss.map(s=>`<tr><td>${safe(s.name)}<br><small>${safe(s.roll)}</small></td><td>${safe(s.cls)}</td><td><div class="actions"><button class="green" onclick="mark('${safe(s.roll)}','حاضر')">حاضر</button><button class="red" onclick="mark('${safe(s.roll)}','غیر حاضر')">غیر حاضر</button><button class="orange" onclick="mark('${safe(s.roll)}','چھٹی')">چھٹی</button></div><small>${safe(val(s.roll,d)||'درج نہیں')}</small></td></tr>`).join('')+'</table>':'<p class="muted">ابھی طلباء شامل نہیں کیے گئے۔</p>';
+}
+$('add').onclick=()=>{let name=$('nm').value.trim(),roll=$('rl').value.trim(),cls=$('cl').value.trim(),pin=$('pn').value.trim();if(!name||!roll||!cls||!/^\d{4}$/.test(pin))return alert('تمام خانے پُر کریں اور 4 ہندسوں کا PIN لکھیں۔');if(db.students.some(s=>s.roll===roll))return alert('یہ رول نمبر پہلے سے موجود ہے۔');db.students.push({name,roll,cls,pin});['nm','rl','cl','pn'].forEach(x=>$(x).value='');save()};
+$('date').onchange=draw;$('search').oninput=draw;
+$('signin').onclick=()=>{let s=db.students.find(x=>x.roll===$('sroll').value.trim()&&x.pin===$('spin').value.trim());if(!s)return $('studentout').innerHTML='<p class="muted">رول نمبر یا PIN درست نہیں۔</p>';let a=Object.entries(db.attendance).filter(([d,r])=>r[s.roll]).map(([date,r])=>({date,status:r[s.roll]})).sort((x,y)=>y.date.localeCompare(x.date));let p=a.filter(x=>x.status==='حاضر').length;$('studentout').innerHTML=`<h2>${safe(s.name)}</h2><p>کلاس: ${safe(s.cls)} | رول نمبر: ${safe(s.roll)}</p><p><b>حاضری: ${a.length?p/a.length*100|0:0}%</b> — حاضر ${p}، غیر حاضر ${a.filter(x=>x.status==='غیر حاضر').length}، چھٹی ${a.filter(x=>x.status==='چھٹی').length}</p><table><tr><th>تاریخ</th><th>حالت</th></tr>${a.map(x=>`<tr><td>${x.date}</td><td>${safe(x.status)}</td></tr>`).join('')}</table>`};
+function rows(){let r=$('rr').value.trim();return db.students.filter(s=>!r||s.roll===r).map(s=>{let a=Object.entries(db.attendance).filter(([d,x])=>x[s.roll]).map(([d,x])=>x[s.roll]),p=a.filter(x=>x==='حاضر').length;return {s,p,ab:a.filter(x=>x==='غیر حاضر').length,l:a.filter(x=>x==='چھٹی').length,pc:a.length?Math.round(p/a.length*100):0}})}
+$('showreport').onclick=()=>{$('reportout').innerHTML='<table><tr><th>نام / رول</th><th>حاضر</th><th>غیر حاضر</th><th>چھٹی</th><th>%</th></tr>'+rows().map(x=>`<tr><td>${safe(x.s.name)}<br>${safe(x.s.roll)}</td><td>${x.p}</td><td>${x.ab}</td><td>${x.l}</td><td>${x.pc}%</td></tr>`).join('')+'</table>'};
+$('download').onclick=()=>{let data='Name,Roll,Class,Present,Absent,Leave,Percent\n'+rows().map(x=>[x.s.name,x.s.roll,x.s.cls,x.p,x.ab,x.l,x.pc].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+data],{type:'text/csv;charset=utf-8'}));a.download='student-attendance.csv';a.click();URL.revokeObjectURL(a.href)};
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('on',x===b));['teacher','student','reports'].forEach(id=>$(id).classList.toggle('hide',id!==b.dataset.page))});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});draw();
+</script></body></html>
